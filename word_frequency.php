@@ -1,6 +1,6 @@
 <?php
 
-class WordFrequency {
+class WordFrequencyCalculation {
     private $text;
     private $sort;
     private $limit;
@@ -61,8 +61,8 @@ class WordFrequency {
         
         <label for="sort">Sort by frequency:</label>
         <select id="sort" name="sort">
-            <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
         </select><br><br>
         
         <label for="limit">Number of words to display:</label>
@@ -73,7 +73,7 @@ class WordFrequency {
 
     <?php 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        require 'word_frequency.php';
+        $wordFrequency = new WordFrequencyCalculation();
         $wordFrequency->setSort($_POST['sort']);
         $wordFrequency->setLimit($_POST['limit']);
         $wordFrequency->setText($_POST['text']);
