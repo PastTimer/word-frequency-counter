@@ -27,16 +27,27 @@
 
     <?php 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        require 'word_frequency.php';
         $wordFrequency = new WordFrequency();
         $wordFrequency->setSort($_POST['sort']);
         $wordFrequency->setLimit($_POST['limit']);
         $wordFrequency->setText($_POST['text']);
 
-        $words = preg_split('/\s+|[^a-zA-Z0-9]+/', $_POST['text']);
-        $wordFrequency->setWords($words);
-    }
+        $stopWords = ['the', 'and', 'or', 'in', 'on', 'is', 'a', 'an'];
 
+        $words = preg_split('/\s+|[^a-zA-Z0-9]+/', $_POST['text']);
+        $words = array_diff($words, $stopWords);
+        $wordFrequency->setWords($words);
+
+        $frequencies = $wordFrequency->calculateFrequency();
+        $sortedFrequencies = $wordFrequency->sortFrequencies($frequencies, $_POST['sort']);
+        $limit = $_POST['limit'];
+        $sortedFrequencies = array_slice($sortedFrequencies, 0, $limit);
+        echo "<h2>Word Frequencies</h2>";
+        echo "<ul>";
+        foreach ($sortedFrequencies as $word => $count) {
+            echo "<li>$word: $count</li>";
+        }
+        echo "</ul>";
     ?>
 </body>
 </html>
